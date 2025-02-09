@@ -1,0 +1,38 @@
+
+
+services:
+  web:
+    image: my-dotnet-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7112:8080" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=db;Database=EShop_IS_2024;User Id=sa;Password=YourPassword123;Trusted_Connection=False;MultipleActiveResultSets=true
+    depends_on:
+      - db
+    networks:
+      - eshop-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Admin123
+    ports:
+      - "1433:1433"
+    networks:
+      - eshop-network
+    volumes:
+      - db_data:/var/opt/mssql
+
+networks:
+  eshop-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
