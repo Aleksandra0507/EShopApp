@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshop-app-deployment
+  namespace: eshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eshop-app
+  template:
+    metadata:
+      labels:
+        app: eshop-app
+    spec:
+      containers:
+        - name: dotnet-app
+          image: my-dotnet-app 
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-config
+                  key: ASPNETCORE_ENVIRONMENT 
+            - name: CONNECTION_STRING
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-config
+                  key: CONNECTION_STRING 
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-db-secret
+                  key: DB_PASSWORD

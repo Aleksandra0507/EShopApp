@@ -7,8 +7,13 @@ using EShop.Repository.Implementation;
 using EShop.Repository.Interface;
 using EShop.Domain.Payment;
 using EShop.Domain.Email;
+using EShop.Repository.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
+//var configuration = new ConfigurationBuilder()
+//    .SetBasePath(Directory.GetCurrentDirectory())
+//    .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+//    .AddEnvironmentVariables();
 
 // Map Stripe Public and Secret Keys
 
@@ -32,7 +37,19 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+builder.Services.AddScoped<IDataInitializer, DataInitializer>();
+
 var app = builder.Build();
+using (var scope = app?.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    IDataInitializer dataInitializer = scope.ServiceProvider.GetRequiredService<IDataInitializer>();
+
+    
+        dataInitializer.Migrate();
+
+   
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

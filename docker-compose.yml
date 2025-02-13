@@ -1,5 +1,3 @@
-
-
 services:
   web:
     image: my-dotnet-app
@@ -10,7 +8,7 @@ services:
       - "7112:8080" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Server=db;Database=EShop_IS_2024;User Id=sa;Password=YourPassword123;Trusted_Connection=False;MultipleActiveResultSets=true
+      - ConnectionStrings__DefaultConnection=Server=db;Database=EShop_IS_2024;User Id=sa;Password=Admin123;Trusted_Connection=False;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True
     depends_on:
       - db
     networks:
@@ -24,10 +22,12 @@ services:
       - SA_PASSWORD=Admin123
     ports:
       - "1433:1433"
+    user: root
     networks:
       - eshop-network
     volumes:
       - db_data:/var/opt/mssql
+    command: /bin/bash -c "chown -R mssql /var/opt/mssql && /opt/mssql/bin/sqlservr"
 
 networks:
   eshop-network:

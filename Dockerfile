@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the solution and project files into the container (you can adjust the path if necessary)
+# Copy the solution and project files into the container 
 COPY EShop.Domain/EShop.Domain.csproj EShop.Domain/
 COPY EShop.Repository/EShop.Repository.csproj EShop.Repository/
 COPY EShop.Service/EShop.Service.csproj EShop.Service/
@@ -19,7 +19,7 @@ COPY . ./
 # Publish the application to the /app/publish directory
 RUN dotnet publish EShop.Web/EShop.Web.csproj -c Release -o /app/publish
 
-# Use the official .NET runtime image for running the application (smaller image)
+# Use the official .NET runtime image for running the application
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
 # Set the working directory for the runtime container
