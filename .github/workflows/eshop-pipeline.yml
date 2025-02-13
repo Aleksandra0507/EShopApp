@@ -1,0 +1,32 @@
+name: EShop Application Pipeline
+
+on:
+  push:
+    branches:
+      - master  # Trigger the pipeline when pushing to the 'master' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # The environment where the pipeline will run
+
+    steps:
+    # Step 1: Checkout the repository code
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Log in to DockerHub
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Step 3: Build the Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t aleksandra5/my-dotnet-app:latest .
+
+    # Step 4: Push the Docker image to DockerHub
+    - name: Push Docker image to DockerHub
+      run: |
+        docker push aleksandra5/my-dotnet-app:latest
